@@ -49,14 +49,18 @@ describe('模块一', () => {
     // func.mockReturnValueOnce('dell')
     // func.mockReturnValueOnce('ios')
     // func.mockReturnValueOnce('lenovo')
+
+    // func.mockReturnThis()
     runCallback(func);
-    // expect(func.mock.calls[0]).toEqual(['hyd'])
+    // expect(func.mock.calls[0]).toEqual(['hyd1'])
+    expect(func).toBeCalledWith('hyd1')
     runCallback(func);
     runCallback(func);
     console.log(func.mock)
     //func.mock.calls 查看函数调用的次数
     expect(func.mock.calls.length).toBe(3) //像这种语句 expect叫做断言
     expect(func.mock.results[0].value).toBe('789')
+    // expect(func.mock.results[0].value).toBeUndefined()
     expect(func).toBeCalled()  //指的是被调用的次数
   })
 
