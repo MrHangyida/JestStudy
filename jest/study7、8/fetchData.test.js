@@ -3,7 +3,7 @@ import Counter from './fetchData'
 // 每一个describe都有 beforeAll beforeEach afterEach afterAll
 // 每次执行的时候 都是先执行外部的beforeAll（如果还有内部）再执行内部的beforeAll其次就是就是beforeEach afterEach afterAll依次执行
 // test.only只检测某一个测试用例
-// 准备型代码放到声明周期里面
+// 准备型代码放到生命周期里面
 describe('测试Counter的代码', () => {
   let counter = null
 
