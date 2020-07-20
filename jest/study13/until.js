@@ -2,14 +2,14 @@ export default class Until {
     constructor() {
         this.number = 0
     }
-    init() {
+    init () {
 
     }
-    a(x, y) {
+    a (x, y) {
         this.number = x * y
         return x * y
     }
-    b() {
+    b () {
 
     }
 }

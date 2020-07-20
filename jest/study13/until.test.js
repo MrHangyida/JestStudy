@@ -14,7 +14,6 @@ describe('until 模块', () => {
     afterAll(() => {
         console.log('afterAll')
     })
-    console.log(until, 1111)
     test('测试 a方法', () => {
         expect(until.a(2, 3)).toBe(6)
     })
