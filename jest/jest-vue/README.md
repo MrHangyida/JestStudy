@@ -1,4 +1,4 @@
-# jest-vue
+# test-jest
 
 ## Project setup
 ```
