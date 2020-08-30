@@ -19,7 +19,9 @@ export default {
     TodoList
   },
   data () {
+    return {
 
+    }
   },
   methods: {
     goHome () {
