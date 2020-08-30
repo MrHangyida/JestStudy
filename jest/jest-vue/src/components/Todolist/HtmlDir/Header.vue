@@ -15,10 +15,9 @@ export default {
   },
   methods: {
     addInput () {
-      if (this.inputVal) {
-        this.$emit('add', this.inputVal)
+      if (this.inputVal && (this.inputVal !== null || this.inputVal !== '' || this.inputVal.length > 0)) {
+        this.$emit('add', { val: this.inputVal, ing: false })
         this.inputVal = ''
-        console.log(this.inputVal)
       }
     }
   }
