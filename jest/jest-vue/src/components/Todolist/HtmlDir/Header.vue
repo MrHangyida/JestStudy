@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <label for="searchInp">ToDolist</label>
+     <label for="searchInp">ToDolist</label>
      <input type="text" id="searchInp" placeholder="添加ToDo" attr-test="input" name="addAndRemoveText" like="myself" v-model="inputVal" @keypress.enter="addInput" ref="searchInp" />
   </div>
 </template>
@@ -16,8 +16,10 @@ export default {
   methods: {
     addInput () {
       if (this.inputVal && (this.inputVal !== null || this.inputVal !== '' || this.inputVal.length > 0)) {
-        this.$emit('add', { val: this.inputVal, ing: false })
+        this.$emit('add', { val: this.inputVal, done: false, flag: false })
         this.inputVal = ''
+      } else {
+        alert('inputVal不能为空')
       }
     }
   }

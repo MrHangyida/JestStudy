@@ -5,11 +5,12 @@
         <h3>正在进行中</h3>
         <span>{{this.todoList.length}}</span>
       </div>
-      <ol class>
+      <ol  v-if="todoList.length>0">
         <li v-for="(item,index) in todoList" :key="index">
           <div class="left">
-            <input type="checkbox" :data-index="index" :value="index" :checked="item.ing"  ref="inp"  @input='changeInput' />
-            <span>{{item.val}}</span>
+            <input type="checkbox" :data-index="index" :value="index" :checked="item.done"  ref="inp"  @input='changeInput' />
+            <span @click="editInput(index)" v-show="!item.flag">{{item.val}}</span>
+            <input type="text" class="editInput" :value="item.val" v-show="item.flag"  @blur="editSuccess(index)" ref="editSuccess" autofocus="autofocus"/>
           </div>
           <div class="right">
             <div class="del" @click="delToDo(index)">-</div>
@@ -22,10 +23,10 @@
         <h3>已经完成</h3>
         <span>{{this.todoListSuccess.length}}</span>
       </div>
-      <ol class>
-        <li v-for="(item,index) in todoListSuccess" :key="index">
+      <ol v-if="todoListSuccess.length>0">
+        <li v-for="(item,index) in todoListSuccess" :key="index" class="done">
           <div class="left">
-            <input type="checkbox" :data-index="index" :value="index" :checked="item.ing"  ref="inp2"  @input='changeInput2' />
+            <input type="checkbox" :data-index="index" :value="index" :checked="item.done"  ref="inp2"  @input='changeInput2' />
             <span>{{item.val}}</span>
           </div>
           <div class="right">
@@ -33,6 +34,10 @@
           </div>
         </li>
       </ol>
+    </div>
+    <div class="authorCopy">
+      <!-- &reg; -->
+      Copyright &copy; 2020.8.31 杭一达 <span @click="clear">clear列表</span>
     </div>
   </div>
 </template>
@@ -46,12 +51,17 @@ export default {
       default: function () {
         return []
       }
+    },
+    editFlag: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
     return {
       todoList: [],
-      todoListSuccess: []
+      todoListSuccess: [],
+      editVal: ''
     }
   },
   watch: {
@@ -60,10 +70,6 @@ export default {
         this.todoList = val
       },
       deep: true
-    },
-    todoList: function (val) {
-      console.log(val)
-      this.todoList = val
     }
   },
   created () {
@@ -92,11 +98,11 @@ export default {
         })
         this.todoListSuccess.push(successItem[0])
         this.todoListSuccess = this.todoListSuccess.map(item => {
-          item.ing = true
+          item.done = true
           return item
         })
         this.todoList.splice(index, 1)
-        console.log(this.todoList, 'shanchu')
+        this.$emit('changeTodo', this.todoList)
         window.localStorage.setItem('todo', JSON.stringify(this.todoList))
         window.localStorage.setItem('todo200', JSON.stringify(this.todoListSuccess))
         e.target.checked = false
@@ -115,9 +121,10 @@ export default {
         window.localStorage.setItem('todo200', JSON.stringify(this.todoListSuccess))
         this.todoList.push(todoItem[0])
         this.todoList = this.todoList.map(item => {
-          item.ing = false
+          item.done = false
           return item
         })
+        this.$emit('changeTodo', this.todoList)
         window.localStorage.setItem('todo', JSON.stringify(this.todoList))
         e.target.checked = true
       }
@@ -127,14 +134,34 @@ export default {
       this.todoList = this.todoList.filter((item, ind) => {
         return ind !== index
       })
+      this.$emit('changeTodo', this.todoList)
       window.localStorage.setItem('todo', JSON.stringify(this.todoList))
     },
     delToDo2 (index) {
-      // this.todoList.splice(index, 1)
       this.todoListSuccess = this.todoListSuccess.filter((item, ind) => {
         return ind !== index
       })
       window.localStorage.setItem('todo200', JSON.stringify(this.todoListSuccess))
+    },
+    editInput (index) {
+      this.todoList[index].flag = !this.todoList[index].flag
+      this.$nextTick(() => {
+        this.$refs.editSuccess[index].focus()
+      })
+    },
+    editSuccess (index) {
+      this.todoList[index].flag = false
+      this.todoList[index].val = this.$refs.editSuccess[index].value
+      this.$emit('changeTodo', this.todoList)
+      window.localStorage.setItem('todo', JSON.stringify(this.todoList))
+    },
+    clear () {
+      // window.localStorage.clear()
+      this.todoList = []
+      this.todoListSuccess = []
+      this.$emit('changeTodo', this.todoList)
+      window.localStorage.removeItem('todo')
+      window.localStorage.removeItem('todo200')
     }
   }
 }
@@ -192,6 +219,7 @@ export default {
           height: 22px;
           display: flex;
           align-items: center;
+          flex:1;
           > input {
              height: 22px;
             width: 22px;
@@ -199,8 +227,19 @@ export default {
             outline: none;
             margin-right: 10px;
           }
+          >span{
+            flex: 1;
+          }
+          >input.editInput{
+            flex:1;
+            outline: none;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+            padding-left: 10px;
+          }
         }
         .right{
+          width: 22px;
           .del{
             width: 22px;
             height: 22px;
@@ -219,6 +258,22 @@ export default {
       > li:hover:nth-child(odd) {
         color: red;
       }
+      >li.done{
+        background: rgb(241, 233, 233);
+        opacity: .6;
+      }
+    }
+  }
+  .authorCopy{
+    width:100%;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    font-size: 14px;
+    color: #666;
+    >span{
+      color: red;
+      cursor: pointer;
     }
   }
 }

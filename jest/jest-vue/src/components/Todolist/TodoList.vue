@@ -1,7 +1,7 @@
 <template>
   <div class="todolist">
     <Headers @add="addToDoItem"></Headers>
-    <ToDoBody :todo='todo'  />
+    <ToDoBody :todo='todo' :editFlag="editFlag" @changeTodo="changeTodo" />
   </div>
 </template>
 
@@ -16,7 +16,8 @@ export default {
   },
   data () {
     return {
-      todo: []
+      todo: [],
+      editFlag: false
     }
   },
 
@@ -34,13 +35,15 @@ export default {
       const flag = window.localStorage.getItem('todo')
       if (flag) {
         const flagArr = JSON.parse(flag)
-        console.log(flagArr, 'add if')
         window.localStorage.setItem('todo', JSON.stringify(flagArr.concat(val)))
         this.todo = JSON.parse(window.localStorage.getItem('todo'))
       } else {
         this.todo.push(val)
         window.localStorage.setItem('todo', JSON.stringify(this.todo))
       }
+    },
+    changeTodo (arr) {
+      this.todo = arr
     }
   }
 }
